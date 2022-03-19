@@ -248,14 +248,12 @@ const homePage = () => `
             let aeskey = document.querySelector("input[name=aes-key]").value
             let e = false
             let msg = input
-            // TODO 支持aes加密信息 前端进行
             if (aeskey) {
                 msg = CryptoJS.AES.encrypt(input, escape(aeskey)).toString()
                 e = true
             }
 
             if (input.length) {
-                // TODO 支持设置最大访问次数
                 // TODO 支持设置过期时间
                 let d = JSON.stringify({
                     message: msg,
