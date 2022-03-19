@@ -118,6 +118,7 @@ const homePage = () => `
     }
 
     .message-area {
+        font-size: 1.5rem;
         padding: 1rem;
         height: 90%;
         width: 90%;
@@ -130,16 +131,36 @@ const homePage = () => `
             padding-top: 1rem;
             height: 80%;
         }
+
+        .message-area {
+            font-size: 1.2rem;
+        }
+    }
+
+    @media (min-width: 1921px) {
+        .card-container {
+            padding-top: 7rem;
+            height: 80%;
+        }
+
+        .message-area {
+            font-size: 1.8rem;
+        }
+
+        .mdui-textfield-label {
+            font-size: 1.5rem;
+        }
+
     }
 </style>
 
-<body class="mdui-theme-layout-auto">
+<body class="mdui-theme-layout-auto mdui-theme-accent-cyan">
     <header class="mdui-appbar">
         <div class="mdui-toolbar mdui-color-theme">
             <a href="javascript:;" class="mdui-typo-headline mdui-ripple">Digital Pigeon</a>
             <a href="javascript:;" class="mdui-typo-title mdui-ripple">咕咕送信</a>
             <div class="mdui-toolbar-spacer"></div>
-            <a href="https://github.com/aoyouer/digitalpigeon" target="_blank">
+            <a href="https://github.com/aoyouer/digital-pigeon" target="_blank">
                 <ion-icon name="logo-github" class="mdui-icon"></ion-icon>
             </a>
         </div>
@@ -160,7 +181,7 @@ const homePage = () => `
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">Maximum visits</label>
                             <input class="mdui-textfield-input" name="maxium-vists" type="text" value=0
-                                pattern="(^[1-9][1-9]*$)|(^0$)" required />
+                                pattern="(^[1-9][0-9]*$)|(^0$)" required />
                             <div class="mdui-textfield-error">input must be a number</div>
                             <div class="mdui-textfield-helper">zero for unlimited access</div>
                         </div>
@@ -227,14 +248,12 @@ const homePage = () => `
             let aeskey = document.querySelector("input[name=aes-key]").value
             let e = false
             let msg = input
-            // TODO 支持aes加密信息 前端进行
             if (aeskey) {
                 msg = CryptoJS.AES.encrypt(input, escape(aeskey)).toString()
                 e = true
             }
 
             if (input.length) {
-                // TODO 支持设置最大访问次数
                 // TODO 支持设置过期时间
                 let d = JSON.stringify({
                     message: msg,
@@ -331,23 +350,50 @@ const displayPage = (data) => `
     }
 
     .message-area {
+        box-sizing: border-box;
         padding: 1rem;
+        font-size: 1.5rem;
         height: 90%;
-        width: 90%;
+        width: 100%;
         resize: none;
     }
 
     /* 小屏幕 */
-    @media (max-width: 599px) {}
+    @media (max-width: 599px) {
+        .card-container {
+            padding-top: 3.5rem;
+            height: 85%;
+        }
+
+        .message-area {
+            font-size: 1.2rem;
+        }
+    }
+
+    @media (min-width: 1921px) {
+        .card-container {
+            padding-top: 7rem;
+            height: 85%;
+        }
+
+        .message-area {
+            font-size: 1.8rem;
+        }
+
+        .mdui-textfield-label {
+            font-size: 1.5rem;
+        }
+
+    }
 </style>
 
-<body class="mdui-theme-layout-auto">
+<body class="mdui-theme-layout-auto mdui-theme-accent-blue">
     <header class="mdui-appbar">
         <div class="mdui-toolbar mdui-color-theme">
             <a href="/" class="mdui-typo-headline mdui-ripple">Digital Pigeon</a>
             <a href="/" class="mdui-typo-title mdui-ripple">咕咕送信</a>
             <div class="mdui-toolbar-spacer"></div>
-            <a href="https://github.com/aoyouer/digitalpigeon" target="_blank">
+            <a href="https://github.com/aoyouer/digital-pigeon" target="_blank">
                 <ion-icon name="logo-github" class="mdui-icon"></ion-icon>
             </a>
         </div>
@@ -359,6 +405,9 @@ const displayPage = (data) => `
             <!-- <div class="mdui-col-xs-12 mdui-col-sm-8 mdui-col-offset-sm-2 message-panel"> -->
             <div class="message-container mdui-col-xs-10 mdui-col-offset-xs-1 mdui-col-md-8 mdui-col-offset-md-2">
                 <textarea name="message" class="message-area manual-color" placeholder="Message..."></textarea>
+            </div>
+            <div class="mdui-col-xs-10 mdui-col-offset-xs-1 mdui-col-md-8 mdui-col-offset-md-2">
+                <button id="decrypt" class="mdui-btn mdui-btn-raised generate-link-btn mdui-ripple">Decrypt</button>
             </div>
             <!-- </div> -->
 
@@ -411,8 +460,12 @@ const displayPage = (data) => `
         const askPassword = () => {
             mdui.prompt('Key required', 'Encrypted message',
                 (key) => {
-                    let decrypted = CryptoJS.AES.decrypt(messageData.message, escape(key)).toString(CryptoJS.enc.Utf8);
-                    messageElement.innerText = decrypted
+                    let decrypted = CryptoJS.AES.decrypt(messageData.message, escape(key)).toString(CryptoJS.enc.Utf8)
+                    if (decrypted !== "") {
+                        messageElement.innerText = decrypted
+                    } else {
+                        mdui.alert('Failed to decrypt');
+                    }
                 },
                 () => {
                 },
@@ -423,6 +476,7 @@ const displayPage = (data) => `
         }
 
         const messageData = ${data}
+        document.querySelector("#decrypt").addEventListener("click", askPassword)
         let messageElement = document.querySelector("textarea[name=message]")
         messageElement.innerText = messageData.message
         if (messageData.encrypt) {
