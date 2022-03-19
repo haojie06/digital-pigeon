@@ -118,6 +118,7 @@ const homePage = () => `
     }
 
     .message-area {
+        font-size: 1.5rem;
         padding: 1rem;
         height: 90%;
         width: 90%;
@@ -130,16 +131,36 @@ const homePage = () => `
             padding-top: 1rem;
             height: 80%;
         }
+
+        .message-area {
+            font-size: 1.2rem;
+        }
+    }
+
+    @media (min-width: 1921px) {
+        .card-container {
+            padding-top: 7rem;
+            height: 80%;
+        }
+
+        .message-area {
+            font-size: 1.8rem;
+        }
+
+        .mdui-textfield-label {
+            font-size: 1.5rem;
+        }
+
     }
 </style>
 
-<body class="mdui-theme-layout-auto">
+<body class="mdui-theme-layout-auto mdui-theme-accent-cyan">
     <header class="mdui-appbar">
         <div class="mdui-toolbar mdui-color-theme">
             <a href="javascript:;" class="mdui-typo-headline mdui-ripple">Digital Pigeon</a>
             <a href="javascript:;" class="mdui-typo-title mdui-ripple">咕咕送信</a>
             <div class="mdui-toolbar-spacer"></div>
-            <a href="https://github.com/aoyouer/digitalpigeon" target="_blank">
+            <a href="https://github.com/aoyouer/digital-pigeon" target="_blank">
                 <ion-icon name="logo-github" class="mdui-icon"></ion-icon>
             </a>
         </div>
@@ -160,7 +181,7 @@ const homePage = () => `
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">Maximum visits</label>
                             <input class="mdui-textfield-input" name="maxium-vists" type="text" value=0
-                                pattern="(^[1-9][1-9]*$)|(^0$)" required />
+                                pattern="(^[1-9][0-9]*$)|(^0$)" required />
                             <div class="mdui-textfield-error">input must be a number</div>
                             <div class="mdui-textfield-helper">zero for unlimited access</div>
                         </div>
@@ -338,16 +359,41 @@ const displayPage = (data) => `
     }
 
     /* 小屏幕 */
-    @media (max-width: 599px) {}
+    @media (max-width: 599px) {
+        .card-container {
+            padding-top: 1rem;
+            height: 80%;
+        }
+
+        .message-area {
+            font-size: 1.2rem;
+        }
+    }
+
+    @media (min-width: 1921px) {
+        .card-container {
+            padding-top: 7rem;
+            height: 85%;
+        }
+
+        .message-area {
+            font-size: 1.8rem;
+        }
+
+        .mdui-textfield-label {
+            font-size: 1.5rem;
+        }
+
+    }
 </style>
 
-<body class="mdui-theme-layout-auto">
+<body class="mdui-theme-layout-auto mdui-theme-accent-blue">
     <header class="mdui-appbar">
         <div class="mdui-toolbar mdui-color-theme">
             <a href="/" class="mdui-typo-headline mdui-ripple">Digital Pigeon</a>
             <a href="/" class="mdui-typo-title mdui-ripple">咕咕送信</a>
             <div class="mdui-toolbar-spacer"></div>
-            <a href="https://github.com/aoyouer/digitalpigeon" target="_blank">
+            <a href="https://github.com/aoyouer/digital-pigeon" target="_blank">
                 <ion-icon name="logo-github" class="mdui-icon"></ion-icon>
             </a>
         </div>
