@@ -350,17 +350,19 @@ const displayPage = (data) => `
     }
 
     .message-area {
+        box-sizing: border-box;
         padding: 1rem;
+        font-size: 1.5rem;
         height: 90%;
-        width: 90%;
+        width: 100%;
         resize: none;
     }
 
     /* 小屏幕 */
     @media (max-width: 599px) {
         .card-container {
-            padding-top: 1rem;
-            height: 80%;
+            padding-top: 3.5rem;
+            height: 85%;
         }
 
         .message-area {
@@ -403,6 +405,9 @@ const displayPage = (data) => `
             <!-- <div class="mdui-col-xs-12 mdui-col-sm-8 mdui-col-offset-sm-2 message-panel"> -->
             <div class="message-container mdui-col-xs-10 mdui-col-offset-xs-1 mdui-col-md-8 mdui-col-offset-md-2">
                 <textarea name="message" class="message-area manual-color" placeholder="Message..."></textarea>
+            </div>
+            <div class="mdui-col-xs-10 mdui-col-offset-xs-1 mdui-col-md-8 mdui-col-offset-md-2">
+                <button id="decrypt" class="mdui-btn mdui-btn-raised generate-link-btn mdui-ripple">Decrypt</button>
             </div>
             <!-- </div> -->
 
@@ -455,8 +460,12 @@ const displayPage = (data) => `
         const askPassword = () => {
             mdui.prompt('Key required', 'Encrypted message',
                 (key) => {
-                    let decrypted = CryptoJS.AES.decrypt(messageData.message, escape(key)).toString(CryptoJS.enc.Utf8);
-                    messageElement.innerText = decrypted
+                    let decrypted = CryptoJS.AES.decrypt(messageData.message, escape(key)).toString(CryptoJS.enc.Utf8)
+                    if (decrypted !== "") {
+                        messageElement.innerText = decrypted
+                    } else {
+                        mdui.alert('Failed to decrypt');
+                    }
                 },
                 () => {
                 },
@@ -467,6 +476,7 @@ const displayPage = (data) => `
         }
 
         const messageData = ${data}
+        document.querySelector("#decrypt").addEventListener("click", askPassword)
         let messageElement = document.querySelector("textarea[name=message]")
         messageElement.innerText = messageData.message
         if (messageData.encrypt) {
