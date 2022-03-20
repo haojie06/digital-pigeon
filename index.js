@@ -37,7 +37,7 @@ router.GET("/message/:id", async ({ params }) => {
   let data = JSON.parse(msg)
   if (data == null) {
     console.log("cannot find kv")
-    return new Response(displayPage(JSON.stringify({ message: "Cannot find message..." })), { headers: { 'Content-Type': 'text/html' }, status: 200 })
+    return new Response(displayPage(JSON.stringify({ message: "" })), { headers: { 'Content-Type': 'text/html' }, status: 200 })
   }
 
   // 对于过期/访问次数的判断
