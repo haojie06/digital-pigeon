@@ -56,6 +56,10 @@
         resize: none;
     }
 
+    .ttl-select {
+        margin-top: 1rem;
+    }
+
     /* 小屏幕 */
     @media (max-width: 599px) {
         .card-container {
@@ -85,7 +89,7 @@
     }
 </style>
 
-<body class="mdui-theme-layout-auto mdui-theme-accent-cyan">
+<body class="mdui-theme-layout-auto">
     <header class="mdui-appbar">
         <div class="mdui-toolbar mdui-color-theme">
             <a href="javascript:;" class="mdui-typo-headline mdui-ripple">Digital Pigeon</a>
@@ -121,6 +125,12 @@
                             <input class="mdui-textfield-input" name="aes-key" type="text" value=""
                                 placeholder="random key" />
                             <div class="mdui-textfield-helper">leave blank to use a random encryption key</div>
+                        </div>
+                        <div class="ttl-select">
+                            <label class="mdui-textfield-label">Message TTL (days)</label>
+                            <label class="mdui-slider mdui-slider-discrete">
+                                <input type="range" name="message-ttl" step="1" min="1" max="30" value=1 />
+                            </label>
                         </div>
                     </div>
                 </form>
@@ -178,6 +188,8 @@
         const generateMessage = async () => {
             let input = document.querySelector("textarea[name=message]").value
             let mv = parseInt(document.querySelector("input[name=maxium-vists]").value)
+            let mttl = parseInt(document.querySelector("input[name=message-ttl]").value)
+
             if (window.isNaN(mv)) {
                 mv = 0
             }
@@ -194,10 +206,10 @@
             }
 
             if (input.length) {
-                // TODO 支持设置过期时间
                 let d = JSON.stringify({
                     message: msg,
-                    maxvists: mv
+                    maxvists: mv,
+                    ttld: mttl
                 })
                 const response = await fetch("/message", {
                     method: "POST",

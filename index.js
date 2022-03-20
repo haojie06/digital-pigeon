@@ -20,9 +20,12 @@ router.POST("/message", async request => {
   const body = await request.json()
   console.log(body)
   let id = uuidv4()
+  if (body.ttld > 30) {
+    body.ttld = 1
+  }
   if (body.message) {
     body.visit = 0
-    await setKV(id, JSON.stringify(body))
+    await setKV(id, JSON.stringify(body), body.ttld * 86400)
     // 成功的话，返回id，由前端拼接获得分享链接
     return new Response(id, { status: 200 });
   } else {
@@ -40,7 +43,7 @@ router.GET("/message/:id", async ({ params }) => {
     return new Response(displayPage(JSON.stringify({ message: "" })), { headers: { 'Content-Type': 'text/html' }, status: 200 })
   }
 
-  // 对于过期/访问次数的判断
+  // 对于访问次数的判断
   if (data.maxvists != 0) {
     data.visit = data.visit + 1
     if (data.visit == data.maxvists) {
