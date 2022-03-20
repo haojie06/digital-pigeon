@@ -63,7 +63,8 @@ router.GET("/message/:id", async ({ params }) => {
 })
 
 router.all("*", () => new Response("404, not found!", { status: 404 }))
-const setKV = async (id, message) => PIGEON.put(id, message)
+// 消息默认有效期都为一天
+const setKV = async (id, message, ttl = 86400) => PIGEON.put(id, message, { expirationTtl: ttl })
 const getKV = async (id) => PIGEON.get(id)
 const delKV = async (id) => PIGEON.delete(id)
 
