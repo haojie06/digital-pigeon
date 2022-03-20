@@ -18,6 +18,7 @@ wrangler login
 wrangler whoami
 # 创建kv储存并与 "PIGEON" 命名空间绑定
 wrangler wrangler kv:namespace create "PIGEON"
+npm install
 # 编辑 wrangler.toml 填上 Account ID 以及 KV的ID 并将worker改成自己想要的名字，或者另外配置zone
 wrangler publish
 ```
@@ -47,6 +48,7 @@ wrangler login
 wrangler whoami
 # Create kv storage and bind it to the "PIGEON" namespace
 wrangler wrangler kv:namespace create "PIGEON"
+npm install
 # Edit wrangler.toml and fill in the Account ID and KV ID and change the worker to the name you want, or configure another zone
 wrangler publish
 ```
