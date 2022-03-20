@@ -1,4 +1,3 @@
-`
 <!DOCTYPE html>
 <html lang="en">
 
@@ -153,7 +152,13 @@
         const askPassword = () => {
             mdui.prompt('Key required', 'Encrypted message',
                 (key) => {
-                    let decrypted = CryptoJS.AES.decrypt(messageData.message, escape(key)).toString(CryptoJS.enc.Utf8)
+                    let decrypted
+                    try {
+                        decrypted = CryptoJS.AES.decrypt(messageData.message, escape(key)).toString(CryptoJS.enc.Utf8)
+                    } catch (err) {
+                        decrypted = ""
+                    }
+
                     if (decrypted !== "") {
                         messageElement.innerText = decrypted
                     } else {
@@ -180,4 +185,3 @@
 </body>
 
 </html>
-`
