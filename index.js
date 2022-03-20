@@ -67,8 +67,15 @@ const setKV = async (id, message) => PIGEON.put(id, message)
 const getKV = async (id) => PIGEON.get(id)
 const delKV = async (id) => PIGEON.delete(id)
 
+String.prototype.interpolate = function (params) {
+  const names = Object.keys(params);
+  const vals = Object.values(params);
+  return new Function(...names, `return \`${this}\`;`)(...vals);
+}
 
+var sprintf = (str, ...argv) => !argv.length ? str :
+  sprintf(str = str.replace(sprintf.token || "$$", argv.shift()), ...argv);
 // 信息展示页
 const displayPage = (data) => {
-  return "`" + display + "`"
+  return sprintf(display, data)
 }
