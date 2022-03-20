@@ -25,7 +25,7 @@ wrangler publish
 
 ## TODOs
 
-- [ ] 完善信息提示 (如密码错误、服务器错误等)
+- [x] 完善信息提示 (如密码错误、服务器错误等)
 - [ ] 储存信息过期机制
 - [x] 全局强制加密，服务器只储存密文
 - [ ] 支持图片分享
@@ -52,4 +52,3 @@ npm install
 # Edit wrangler.toml and fill in the Account ID and KV ID and change the worker to the name you want, or configure another zone
 wrangler publish
 ```
-
