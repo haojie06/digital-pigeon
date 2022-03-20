@@ -10,3 +10,4 @@ kv_namespaces = [
   {binding = "PIGEON", preview_id = "", id = ""}
 
 ]
+webpack_config = "webpack.config.js"
