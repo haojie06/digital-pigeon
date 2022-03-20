@@ -96,7 +96,7 @@
             <!-- 展示卡片 -->
             <!-- <div class="mdui-col-xs-12 mdui-col-sm-8 mdui-col-offset-sm-2 message-panel"> -->
             <div class="message-container mdui-col-xs-10 mdui-col-offset-xs-1 mdui-col-md-8 mdui-col-offset-md-2">
-                <textarea name="message" class="message-area manual-color" placeholder="Message..."></textarea>
+                <textarea name="message" class="message-area manual-color" placeholder="Message..." disabled></textarea>
             </div>
             <div class="mdui-col-xs-10 mdui-col-offset-xs-1 mdui-col-md-8 mdui-col-offset-md-2">
                 <button id="decrypt" class="mdui-btn mdui-btn-raised generate-link-btn mdui-ripple">Decrypt</button>
@@ -149,20 +149,27 @@
         window.matchMedia('(prefers-color-scheme: dark)').addListener(listeners.dark)
         window.matchMedia('(prefers-color-scheme: light)').addListener(listeners.light)
 
+
+        // 解密部分
+        const decrypt = (emessage, key) => {
+            let decrypted
+            try {
+                decrypted = CryptoJS.AES.decrypt(emessage, escape(key)).toString(CryptoJS.enc.Utf8)
+            } catch (err) {
+                decrypted = ""
+            }
+            return decrypted
+        }
+
         const askPassword = () => {
             mdui.prompt('Key required', 'Encrypted message',
                 (key) => {
-                    let decrypted
-                    try {
-                        decrypted = CryptoJS.AES.decrypt(messageData.message, escape(key)).toString(CryptoJS.enc.Utf8)
-                    } catch (err) {
-                        decrypted = ""
-                    }
-
-                    if (decrypted !== "") {
-                        messageElement.innerText = decrypted
+                    let decryptedMessage = decrypt(messageData.message, key)
+                    let messageElement = document.querySelector("textarea[name=message]")
+                    if (decryptedMessage == "") {
+                        mdui.alert('Failed to decrypt.')
                     } else {
-                        mdui.alert('Failed to decrypt');
+                        messageElement.innerText = decryptedMessage
                     }
                 },
                 () => {
@@ -173,13 +180,32 @@
             )
         }
 
+
+        // messageData源于运行时替换的字符串
         const messageData = $$
         document.querySelector("#decrypt").addEventListener("click", askPassword)
+        const params = new URLSearchParams(window.location.search)
+
+
         let messageElement = document.querySelector("textarea[name=message]")
-        messageElement.innerText = messageData.message
-        if (messageData.encrypt) {
-            // 要求输入密钥进行解密
-            askPassword()
+        if (messageData.message === "") {
+            messageElement.innerText = "Cannot find the message..."
+        } else {
+            messageElement.innerText = messageData.message
+            if (params.has('key')) {
+                let aesKey = params.get('key')
+                if (aesKey != "") {
+                    let decryptedMessage = decrypt(messageData.message, aesKey)
+                    if (decryptedMessage == "") {
+                        mdui.alert('Failed to decrypt.')
+                    } else {
+                        messageElement.innerText = decryptedMessage
+                    }
+                }
+            } else {
+                // 询问输入key
+                askPassword()
+            }
         }
     </script>
 </body>

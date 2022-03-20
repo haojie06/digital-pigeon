@@ -117,7 +117,8 @@
                             <div class="mdui-textfield-helper">zero for unlimited access</div>
                         </div>
                         <div class="mdui-textfield">
-                            <label class="mdui-textfield-label">password (Leave blank for no encryption)</label>
+                            <label class="mdui-textfield-label">Custom encryption key (Leave blank to use a random
+                                encryption key)</label>
                             <input class="mdui-textfield-input" name="aes-key" type="text" value="" />
                         </div>
                     </div>
@@ -176,31 +177,32 @@
         const generateMessage = async () => {
             let input = document.querySelector("textarea[name=message]").value
             let mv = parseInt(document.querySelector("input[name=maxium-vists]").value)
+            let defaultKey = Math.random().toString(36).substring(2)
             let aeskey = document.querySelector("input[name=aes-key]").value
             let e = false
             let msg = input
-            // TODO 支持aes加密信息 前端进行
             if (aeskey) {
+                // 指定密码加密的文本不会在链接中带上密码
                 msg = CryptoJS.AES.encrypt(input, escape(aeskey)).toString()
-                e = true
+            } else {
+                // 随机生成密码加密，并在分享链接中带上密码
+                msg = CryptoJS.AES.encrypt(input, escape(defaultKey)).toString()
             }
 
             if (input.length) {
-                // TODO 支持设置最大访问次数
                 // TODO 支持设置过期时间
                 let d = JSON.stringify({
                     message: msg,
-                    maxvists: mv,
-                    encrypt: e
+                    maxvists: mv
                 })
                 const response = await fetch("/message", {
                     method: "POST",
                     body: d,
                 })
                 if (response.status == 200) {
-                    let data = await response.text()
+                    let msgID = await response.text()
                     let $ = mdui.$;
-                    // 对应两个按钮的点击事件
+                    // 对应两个按钮的点击事件，复制分享链接
                     $("#generation-ok-dialog").on('cancel.mdui.dialog', () => {
                         clearInputs()
                     })
@@ -209,15 +211,19 @@
                         navigator.clipboard.writeText(shareLink);
                         clearInputs()
                     })
+
                     let dialog = new mdui.Dialog('#generation-ok-dialog');
                     const dialogElement = document.getElementsByClassName("sharelink-content")[0]
                     let url = window.location.href
-                    let shareLink = url.substring(0, url.lastIndexOf("/")) + "/message/" + data
+                    let shareLink = url.substring(0, url.lastIndexOf("/")) + "/message/" + msgID
+                    if (!aeskey) {
+                        shareLink = shareLink + "?key=" + defaultKey
+                    }
                     dialogElement.innerText = shareLink
                     dialog.open()
                 }
             } else {
-                // TODO 信息为空时的提示
+                mdui.alert('Message cannot be empty')
             }
         }
         document.querySelector("#generate").addEventListener("click", generateMessage)
