@@ -105,21 +105,22 @@
                     <!-- 信息输入 -->
                     <div class="message-container mdui-col-xs-12 mdui-col-md-8">
                         <textarea name="message" class="message-area manual-color"
-                            placeholder="Input your message~"></textarea>
+                            placeholder="input your message~"></textarea>
                     </div>
                     <!-- 信息选项 -->
                     <div class="message-options mdui-col-xs-12 mdui-col-md-4">
                         <div class="mdui-textfield">
                             <label class="mdui-textfield-label">Maximum visits</label>
-                            <input class="mdui-textfield-input" name="maxium-vists" type="text" value=0
-                                pattern="(^[1-9][0-9]*$)|(^0$)" required />
+                            <input class="mdui-textfield-input" name="maxium-vists" type="text" placeholder="unlimited"
+                                pattern="(^[1-9][0-9]*$)|(^0$)" />
                             <div class="mdui-textfield-error">input must be a number</div>
                             <div class="mdui-textfield-helper">zero for unlimited access</div>
                         </div>
                         <div class="mdui-textfield">
-                            <label class="mdui-textfield-label">Custom encryption key (Leave blank to use a random
-                                encryption key)</label>
-                            <input class="mdui-textfield-input" name="aes-key" type="text" value="" />
+                            <label class="mdui-textfield-label">Custom encryption key</label>
+                            <input class="mdui-textfield-input" name="aes-key" type="text" value=""
+                                placeholder="random key" />
+                            <div class="mdui-textfield-helper">leave blank to use a random encryption key</div>
                         </div>
                     </div>
                 </form>
@@ -177,6 +178,9 @@
         const generateMessage = async () => {
             let input = document.querySelector("textarea[name=message]").value
             let mv = parseInt(document.querySelector("input[name=maxium-vists]").value)
+            if (window.isNaN(mv)) {
+                mv = 0
+            }
             let defaultKey = Math.random().toString(36).substring(2)
             let aeskey = document.querySelector("input[name=aes-key]").value
             let e = false
@@ -233,7 +237,7 @@
             let m = document.querySelector("input[name=maxium-vists]")
             let aeskey = document.querySelector("input[name=aes-key]")
             input.value = ""
-            m.value = 0
+            m.value = ""
             aeskey.value = ""
         }
 
