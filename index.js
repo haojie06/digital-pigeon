@@ -25,6 +25,7 @@ router.POST("/message", async request => {
   }
   if (body.message) {
     body.visit = 0
+    body.createTime = new Date().toLocaleString()
     await setKV(id, JSON.stringify(body), body.ttld * 86400)
     // 成功的话，返回id，由前端拼接获得分享链接
     return new Response(id, { status: 200 });
